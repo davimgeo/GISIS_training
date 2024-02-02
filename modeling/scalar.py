@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 
 class Wavefield_1D():
 
-    type = "1D wave propagation in constant density acoustic isotropic media"
+    wave_type = "1D wave propagation in constant density acoustic isotropic media"
     
     def __init__(self):
         
         # TODO: read parameters from a file
 
         path = r'C:\Users\malum\Desktop\DAVI\GISIS_training\parameters.txt'
-        parameters = np.loadtxt(path)
+        parameters = np.loadtxt(path, comments="#")
 
         self.nt = int(parameters[0]) # 1001.0
         self.dt = parameters[1] # 1e-3
@@ -22,7 +22,7 @@ class Wavefield_1D():
         self.depth = np.arange(self.nz)*self.dz
         self.times = np.arange(self.nt)*self.dt
 
-        self.interfaces = np.array([1000, 3000, 5000, 7000])
+        self.interfaces = np.array([1000, 3000, 5000, 6000])
         self.velocities = np.array([1500, 2500, 3500, 5000, 3500])
 
         self.model = np.zeros(self.nz)
@@ -31,7 +31,7 @@ class Wavefield_1D():
         self.z_rec = np.array([2500, 3500, 4500])
 
     def get_type(self):
-        print(self.type)
+        print(self.wave_type)
 
     def set_wavelet(self):
     
@@ -47,16 +47,18 @@ class Wavefield_1D():
         for layerId, interface in enumerate(self.interfaces):
             self.model[int(interface/self.dz):] = self.velocities[layerId+1]
 
-    def plot_wavelet(self):
+    def plot_model(self):
        
         fig, ax = plt.subplots(num = "Velocity Model", figsize = (4, 6), clear = True)
 
         ax.plot(self.model, self.depth)
+        ax.plot(self.model[self.z_src // self.dz], self.z_src, "h", label = "Source", color = 'violet')
+        ax.plot(self.model[self.z_rec // self.dz], self.z_rec, "X", label = "Receiver", color = "coral")
         ax.set_title("Velocity Model", fontsize = 18)
         ax.set_xlabel("Velocity [m/s]", fontsize = 15)
         ax.set_ylabel("Depth [m]", fontsize = 15) 
 
-        ax.plot()
+        ax.legend(loc='upper right')
         
         fig.tight_layout()
         plt.gca().invert_yaxis()
@@ -78,9 +80,8 @@ class Wavefield_3D(Wavefield_2D):
         
         self._type = "3D wave propagation in constant density acoustic isotropic media"    
 
+wavefield = Wavefield_1D()
 
-#wavefield = Wavefield_1D()
+wavefield.set_model()
 
-#wavefield.set_model()
-
-#wavefield.plot_wavelet()
+wavefield.plot_model()
