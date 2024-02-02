@@ -22,10 +22,9 @@ class Wavefield_1D():
         self.depth = np.arange(self.nz)*self.dz
         self.times = np.arange(self.nt)*self.dt
 
-        self.interfaces = np.array([1000, 2000, 3000, 4000])
-        self.velocities = np.array([1500, 2000, 2500, 3000, 3500])
+        self.interfaces = np.array([1000, 3000, 5000, 7000])
+        self.velocities = np.array([1500, 2500, 3500, 5000, 3500])
 
-        #self.model = self.velocities[0]*np.ones(self.nz)
         self.model = np.zeros(self.nz)
 
         self.z_src = np.array([100, 200, 300])
@@ -57,8 +56,6 @@ class Wavefield_1D():
         ax.set_xlabel("Velocity [m/s]", fontsize = 15)
         ax.set_ylabel("Depth [m]", fontsize = 15) 
         
-        #ax.set_xlim([0, (self.nt-1)*self.dt])
-        
         fig.tight_layout()
         plt.gca().invert_yaxis()
         plt.grid(True)
@@ -78,3 +75,10 @@ class Wavefield_3D(Wavefield_2D):
         super().__init__()
         
         self._type = "3D wave propagation in constant density acoustic isotropic media"    
+
+
+#wavefield = Wavefield_1D()
+
+#wavefield.set_model()
+
+#wavefield.plot_wavelet()
