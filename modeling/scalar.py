@@ -57,11 +57,11 @@ class Wavefield_1D():
         ax.set_title("Velocity Model", fontsize = 18)
         ax.set_xlabel("Velocity [m/s]", fontsize = 15)
         ax.set_ylabel("Depth [m]", fontsize = 15) 
+        ax.invert_yaxis()
 
         ax.legend(loc='upper right')
         
         fig.tight_layout()
-        plt.gca().invert_yaxis()
         plt.grid(True)
         plt.show()
 
