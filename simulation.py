@@ -11,8 +11,8 @@ def simulation():
     # print(myWave[id]._type)
     myWave[id].get_type()
 
-    myWave[id].set_wavelet()
-    myWave[id].plot_wavelet()
+    myWave[id].set_model()
+    myWave[id].plot_model()
 
 
 if __name__ == "__main__":
