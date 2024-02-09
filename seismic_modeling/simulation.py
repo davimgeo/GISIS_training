@@ -8,11 +8,15 @@ def simulation():
               scalar.Wavefield_2D(),
               scalar.Wavefield_3D()] 
 
-    # print(myWave[id]._type)
     myWave[id].get_type()
-
+    
+    myWave[id].set_wavelet()
     myWave[id].set_model()
+
+    myWave[id].wave_propagation()
+
     myWave[id].plot_model()
+    myWave[id].plot_wavefield()
 
 
 if __name__ == "__main__":
