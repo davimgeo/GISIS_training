@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 class Wavefield_1D():
 
@@ -7,15 +8,12 @@ class Wavefield_1D():
     
     def __init__(self):
 
-        path = r'C:\Users\malum\Desktop\DAVI\GISIS_training\seismic_modeling\parameters.txt'
-        parameters = np.loadtxt(path, comments="#")
+        self.nt = 10001
+        self.dt = 1e-3
+        self.fmax = 50.0
 
-        self.nt = int(parameters[0]) # 1001.0
-        self.dt = parameters[1] # 1e-3
-        self.fmax = int(parameters[2]) # 30.0
-
-        self.nz = int(parameters[3]) # 1001.0
-        self.dz = int(parameters[4]) # 5.0
+        self.nz = 1001
+        self.dz = 5.0
 
         self.depth = np.arange(self.nz)*self.dz
         self.times = np.arange(self.nt)*self.dt
@@ -25,8 +23,10 @@ class Wavefield_1D():
 
         self.model = np.zeros(self.nz)
 
-        self.z_src = np.array([100, 200, 300])
-        self.z_rec = np.array([2500, 3500, 4500])
+        #self.z_src = np.array([100, 200, 300])
+        #self.z_rec = np.array([2500, 3500, 4500])
+        self.z_src = np.array([(0.4*self.nz - 1) * self.dz])
+        self.z_rec = np.array([(0.8*self.nz - 1) * self.dz])
 
     def get_type(self):
         print(self.wave_type)
@@ -50,8 +50,8 @@ class Wavefield_1D():
         fig, ax = plt.subplots(num = "Velocity Model", figsize = (4, 6), clear = True)
 
         ax.plot(self.model, self.depth)
-        ax.plot(self.model[self.z_src // self.dz], self.z_src, "h", label = "Source", color = 'violet')
-        ax.plot(self.model[self.z_rec // self.dz], self.z_rec, "X", label = "Receiver", color = "coral")
+        ax.plot(self.model[int(self.z_src / self.dz)], self.z_src, "h", label = "Source", color = 'violet')
+        ax.plot(self.model[int(self.z_rec / self.dz)], self.z_rec, "X", label = "Receiver", color = "coral")
         ax.set_title("Velocity Model", fontsize = 18)
         ax.set_xlabel("Velocity [m/s]", fontsize = 15)
         ax.set_ylabel("Depth [m]", fontsize = 15) 
@@ -73,9 +73,30 @@ class Wavefield_1D():
         ax.set_xlabel("Time [s]", fontsize = 15)
         ax.set_ylabel("Depth [m]", fontsize = 15)
 
+        ax.set_xlim(0,10000)
+        ax.set_ylim(500,0)
+
         fig.tight_layout()
         plt.show()
 
+    def wave_animation(self):
+        fig, ax = plt.subplots(num = "Wavefield plot", figsize = (8, 8), clear = True)
+        
+        im = ax.imshow(self.P, aspect = "auto", cmap = "Greys")
+        
+
+        ax.set_title("Wavefield plot", fontsize = 18)
+        ax.set_xlabel("Time [s]", fontsize = 15)
+        ax.set_ylabel("Depth [m]", fontsize = 15)
+
+        def animate(frame):
+            im.set_array(self.P[:, frame])
+            return [im]
+
+        ani = FuncAnimation(fig, animate, frames=range(self.nt), repeat=False, blit = True)
+        plt.tight_layout()
+        plt.show()
+    
     def wave_propagation(self):
         
         self.P = np.zeros((self.nz, self.nt))

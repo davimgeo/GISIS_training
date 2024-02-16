@@ -9,7 +9,7 @@ def simulation():
               scalar.Wavefield_3D()] 
 
     myWave[id].get_type()
-    
+
     myWave[id].set_wavelet()
     myWave[id].set_model()
 
