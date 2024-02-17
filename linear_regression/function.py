@@ -1,49 +1,66 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-#   defining a polynomial
-def f(x, parameters):
-    
-    function = 0.0
-    for n, p in enumerate(parameters):
-        function += p*x**n              
-    
-    return function
+class linear_regression():
 
+    def __init__(self):
+
+        self.parameters = np.array([3, 2])
+        self.x = np.linspace(-2, 2, 101)
+        self.y = f(self.x, self.parameters)         
+
+    def noise(self):
 #   applying gaussian noise
-def noise(y):
-    std = 0.5*np.abs(y)
-    noise = std*np.random.rand(len(y))
-    y_noise = y + noise
-    return y_noise
 
+        self.std = 0.5*np.abs(self.y)
+        self.noise = self.std*np.random.rand(len(self.y))
+        self.y_noise = self.y + self.noise
+
+    def plot_graph(self):
 #   plotting graph
-def plot_graph(x, y):
-    fig, ax = plt.subplots(1, 1, figsize = (10,5))
+        
+        fig, ax = plt.subplots(1, 1, figsize = (10,5))
     
-    ax.plot(x,y)
+        ax.plot(self.x, self.y)
 
-    fig.tight_layout
-    plt.grid(True)
-    plt.show()
+        fig.tight_layout
+        plt.grid(True)
+        plt.show()
 
-# euclidian norm
-# creating solution space of a0, a1
-def solution_space(x, y):
+    def solution_space(self):
+#   euclidian norm
+#   creating solution space of a0, a1
     
-    n = 1001
+        self.n = 1001
 
-    a0 = np.linspace(-5, 5, n)
-    a1 = np.linspace(-5, 5, n)
+        self.a0 = np.linspace(-5, 5, self.n)
+        self.a1 = np.linspace(-5, 5, self.n)
 
-    a0, a1 = np.meshgrid(a0, a1)
+        self.a0, self.a1 = np.meshgrid(self.a0, self.a1)
 
-    mat = np.zeros([n,n])
+        self.mat = np.zeros([self.n, self.n])
 
-    for i in range(n):
-        for j in range(n):
-            y_p = a0[i,j] + a1[i,j]*x
+        for i in range(self.n):
+            for j in range(self.n):
+                self.y_p = self.a0[i,j] + self.a1[i,j]*self.x
 
-            mat[i,j] = np.sqrt(np.sum((y - y_p)**2))
+                self.mat[i,j] = np.sqrt(np.sum((self.y - self.y_p)**2))
 
-    return mat, a0, a1
+        self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
+        
+        self.a0_min, self.a1_min = self.a0[self.min_index], self.a1[self.min_index]
+
+    def plot_mesh(self):
+            
+            plt.imshow(self.mat, extent= [-5, 5, 5, -5], aspect= "auto")
+            plt.scatter(self.a0_min, self.a1_min, color = 'k')
+            plt.show()
+
+def f(x, parameters):
+#   defining a polynomial
+        
+        function = 0.0
+        for n, p in enumerate(parameters):
+            function += p*x**n 
+
+        return function
