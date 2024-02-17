@@ -46,4 +46,4 @@ def solution_space(x, y):
 
             mat[i,j] = np.sqrt(np.sum((y - y_p)**2))
 
-    return mat
+    return mat, a0, a1

@@ -2,18 +2,17 @@ import function
 import numpy as np
 import matplotlib.pyplot as plt
 
-parameters = np.array([-2, 1])
+parameters = np.array([3, 2])
 x = np.linspace(-2, 2, 101)
 y = function.f(x, parameters)
 
 y_noise = function.noise(y)
 
-mat = function.solution_space(x, y)
+mat, a0, a1 = function.solution_space(x, y_noise)
 
-# plt.imshow(mat, extent= [-5, 5, 5, -5])
-# plt.show()
+min_index = np.unravel_index(np.argmin(mat, axis=None), mat.shape)
+a0_min, a1_min = a0[min_index], a1[min_index]
 
-a0_ind, a1_ind = np.where(mat == np.min(mat))
-print(a0_ind, a1_ind)
-
-
+plt.imshow(mat, extent= [-5, 5, 5, -5], aspect= "auto")
+plt.scatter(a0_min, a1_min, color = 'k')
+plt.show()
