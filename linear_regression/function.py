@@ -1,75 +1,62 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-class linear_regression_brute_force():
+class LinearRegressionBase():
+    def __init__(self, parameters= np.array([3, 2]), x= np.linspace(-2, 2, 101)):
+        self.parameters = parameters
+        self.x = x
+        self.y = self.f(self.x, self.parameters)
+        self.y_noise = self.noise(self.y)
 
-    def __init__(self):
+    def f(self, x, parameters):
+        function = 0.0
+        for n, p in enumerate(parameters):
+            function += p*x**n
+        return function
 
-        self.parameters = np.array([3, 2])
-        self.x = np.linspace(-2, 2, 101)
-        self.y = f(self.x, self.parameters)         
+    def noise(self, y):
+        std = 0.5*np.abs(y)
+        noises = std*np.random.rand(len(y))
+        return y + noises
 
-    def noise(self):
-#   applying gaussian noise
+    def plot_graph(self, y):
 
-        self.std = 0.5*np.abs(self.y)
-        self.noises = self.std*np.random.rand(len(self.y))
-        self.y_noise = self.y + self.noises
-
-    def plot_graph(self):
-#   plotting graph
-        
         fig, ax = plt.subplots(1, 1, figsize = (10,5))
-    
-        ax.plot(self.x, self.y)
 
-        fig.tight_layout
+        ax.plot(self.x, y, color= "k")
+        ax.scatter(self.x, self.y_noise)
+
+        fig.tight_layout()
         plt.grid(True)
         plt.show()
 
+class LinearRegressionBruteForce(LinearRegressionBase):
     def solution_space(self):
-#   euclidian norm
-#   creating solution space of a0, a1
-    
-        self.n = 1001
-
-        self.a0 = np.linspace(-5, 5, self.n)
-        self.a1 = np.linspace(-5, 5, self.n)
-
+        n = 1001
+        self.a0 = np.linspace(-5, 5, n)
+        self.a1 = np.linspace(-5, 5, n)
         self.a0, self.a1 = np.meshgrid(self.a0, self.a1)
 
-        self.mat = np.zeros([self.n, self.n])
+        self.mat = np.zeros([n, n])
+        for i in range(n):
+            for j in range(n):
+                y_p = self.a0[i,j] + self.a1[i,j]*self.x
 
-        for i in range(self.n):
-            for j in range(self.n):
-                self.y_p = self.a0[i,j] + self.a1[i,j]*self.x
-
-                self.mat[i,j] = np.sqrt(np.sum((self.y_noise - self.y_p)**2))
+                self.mat[i,j] = np.sqrt(np.sum((self.y_noise - y_p)**2))
 
         self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
-        
-        self.a0_min, self.a1_min = self.a0[self.min_index], self.a1[self.min_index]
+
+        return self.a0[self.min_index], self.a1[self.min_index]
 
     def plot_mesh(self):
-            
-            plt.imshow(self.mat, extent= [-5, 5, 5, -5], aspect= "auto")
-            plt.scatter(self.a0_min, self.a1_min, color = 'k')
-            plt.show()
 
-class linear_regression_matrix(linear_regression_brute_force): 
+        plt.imshow(self.mat, extent= [-5, 5, 5, -5], aspect= "auto")
+        plt.scatter(self.a0[self.min_index], self.a1[self.min_index], color = 'k')
 
-    def __init__(self):
-        super().__init__()
+        plt.show()
 
-    def noise(self):
-#   applying gaussian noise
-
-        self.std = 0.5*np.abs(self.y)
-        self.noises = self.std*np.random.rand(len(self.y))
-        self.y_noise = self.y + self.noises
-
+class LinearRegressionMatrix(LinearRegressionBase):
     def linear_regression_solver(self):
-# solving a linear system
 
         d = self.y_noise
         G = np.zeros((len(d), len(self.parameters)))
@@ -82,30 +69,7 @@ class linear_regression_matrix(linear_regression_brute_force):
 
         self.m = np.linalg.solve(GTG, GTD)
 
-    def plot_graph(self):
-    
-        self.a0_min, self.a1_min = self.m[0], self.m[1]
-        self.y_real = f(self.x, self.m)
+    def y_regression(self):
+        self.y_reg = self.f(self.x, self.m)
 
-        fig, ax = plt.subplots(1, 1, figsize= (10,5))
-
-        ax.plot(self.x, self.y_real)
-        ax.scatter(self.x, self.y_noise)
-
-        fig.tight_layout()
-        plt.grid(True)
-        plt.show()
-
-class linear_regression_gradient_descent(linear_regression_brute_force):
-     
-     def __init__(self):
-         super().__init__()
-
-def f(x, parameters):
-#   defining a polynomial
-        
-        function = 0.0
-        for n, p in enumerate(parameters):
-            function += p*x**n 
-
-        return function
+        print(f"Regression Parameters: {self.m}")

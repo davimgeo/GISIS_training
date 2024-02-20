@@ -1,18 +1,23 @@
-from function import linear_regression_brute_force, linear_regression_gradient_descent, linear_regression_matrix
+from function import LinearRegressionBruteForce, LinearRegressionMatrix
 import time
 
 id = 0
 
-regression_model = [linear_regression_brute_force(),
-                    linear_regression_gradient_descent(),
-                    linear_regression_matrix()]
-
 start = time.time()
+if id == 0:
+    lr_brute_force = LinearRegressionBruteForce()
 
-regression_model[id].noise()
-regression_model[id].solution_space()
-regression_model[id].plot_mesh()
+    lr_brute_force.solution_space()
+    end = time.time()
 
-end = time.time()
+    lr_brute_force.plot_mesh()
+elif id == 1:
+    lr_matrix = LinearRegressionMatrix()
+
+    lr_matrix.linear_regression_solver()
+    lr_matrix.y_regression()
+    end = time.time()
+
+    lr_matrix.plot_graph(lr_matrix.y_reg)
 
 print(end - start)
