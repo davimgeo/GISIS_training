@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 
-class linear_regression():
+class linear_regression_brute_force():
 
     def __init__(self):
 
@@ -13,8 +13,8 @@ class linear_regression():
 #   applying gaussian noise
 
         self.std = 0.5*np.abs(self.y)
-        self.noise = self.std*np.random.rand(len(self.y))
-        self.y_noise = self.y + self.noise
+        self.noises = self.std*np.random.rand(len(self.y))
+        self.y_noise = self.y + self.noises
 
     def plot_graph(self):
 #   plotting graph
@@ -44,7 +44,7 @@ class linear_regression():
             for j in range(self.n):
                 self.y_p = self.a0[i,j] + self.a1[i,j]*self.x
 
-                self.mat[i,j] = np.sqrt(np.sum((self.y - self.y_p)**2))
+                self.mat[i,j] = np.sqrt(np.sum((self.y_noise - self.y_p)**2))
 
         self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
         
@@ -55,6 +55,51 @@ class linear_regression():
             plt.imshow(self.mat, extent= [-5, 5, 5, -5], aspect= "auto")
             plt.scatter(self.a0_min, self.a1_min, color = 'k')
             plt.show()
+
+class linear_regression_matrix(linear_regression_brute_force): 
+
+    def __init__(self):
+        super().__init__()
+
+    def noise(self):
+#   applying gaussian noise
+
+        self.std = 0.5*np.abs(self.y)
+        self.noises = self.std*np.random.rand(len(self.y))
+        self.y_noise = self.y + self.noises
+
+    def linear_regression_solver(self):
+# solving a linear system
+
+        d = self.y_noise
+        G = np.zeros((len(d), len(self.parameters)))
+
+        for n in range(len(self.parameters)): 
+            G[:,n] = self.x**n
+
+        GTG = np.dot(G.T, G)
+        GTD = np.dot(G.T, d)
+
+        self.m = np.linalg.solve(GTG, GTD)
+
+    def plot_graph(self):
+    
+        self.a0_min, self.a1_min = self.m[0], self.m[1]
+        self.y_real = f(self.x, self.m)
+
+        fig, ax = plt.subplots(1, 1, figsize= (10,5))
+
+        ax.plot(self.x, self.y_real)
+        ax.scatter(self.x, self.y_noise)
+
+        fig.tight_layout()
+        plt.grid(True)
+        plt.show()
+
+class linear_regression_gradient_descent(linear_regression_brute_force):
+     
+     def __init__(self):
+         super().__init__()
 
 def f(x, parameters):
 #   defining a polynomial
