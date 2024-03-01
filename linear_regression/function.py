@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 class LinearRegressionBase():
-    def __init__(self, parameters= np.array([3, 2]), x= np.linspace(-2, 2, 101)):
+    def __init__(self, parameters= np.array([1/3, 2/3]), x= np.linspace(-2, 2, 101)):
         self.parameters = parameters
         self.x = x
         self.y = self.f(self.x, self.parameters)
@@ -15,7 +15,7 @@ class LinearRegressionBase():
         return function
 
     def noise(self, y):
-        std = 0.5*np.abs(y)
+        std = 2*np.abs(y)
         noises = std*np.random.rand(len(y))
         return y + noises
 
@@ -42,13 +42,15 @@ class LinearRegressionBruteForce(LinearRegressionBase):
             for j in range(n):
                 y_p = self.a0[i,j] + self.a1[i,j]*self.x
 
-                self.mat[i,j] = np.sqrt(np.sum((self.y_noise - y_p)**2))
+                self.mat[i,j] = np.sqrt(np.sum((self.y_noise - y_p)**2)) # euclian norm
 
         self.min_index = np.unravel_index(np.argmin(self.mat, axis=None), self.mat.shape)
 
-        return self.a0[self.min_index], self.a1[self.min_index]
+        print(f"{self.a0[self.min_index], self.a1[self.min_index]} euclian norm")
 
     def plot_mesh(self):
+
+        plt.figure(figsize= (6,6))
 
         plt.imshow(self.mat, extent= [-5, 5, 5, -5], aspect= "auto")
         plt.scatter(self.a0[self.min_index], self.a1[self.min_index], color = 'k')
