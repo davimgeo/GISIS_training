@@ -50,13 +50,15 @@ class cmp_gather():
         plt.grid(True)
         plt.show()
 
-    def solution_space(self):
-        n = 101
-        self.z = np.linspace(350, 1050, 101)
-        self.v = np.linspace(2000, 6000, 101)
+    def solution_space(self, n= 101):
+        self.z = np.linspace(350, 1050, n)
+        self.v = np.linspace(2000, 6000, n)
 
         self.v, self.z = np.meshgrid(self.v, self.z)
 
+        self.space_matrix = self.calculate_space_matrix(n)
+
+    def calculate_space_matrix(self, n):
         self.space_matrix = np.zeros([n, n])
         for i in range(n):
             for j in range(n):
@@ -66,13 +68,19 @@ class cmp_gather():
 
         self.min_index = np.unravel_index(np.argmin(self.space_matrix), self.space_matrix.shape)
 
+        return self.space_matrix
+
     def plot_mesh(self):
-        fig, ax = plt.subplots(ncols= 1, nrows= 1, figsize= (6,6))
+        fig, ax = plt.subplots(ncols= 1, nrows= 1, figsize= (7,7))
 
         ax.imshow(self.space_matrix, extent= [2000, 6000, 350, 1050], aspect= "auto")
 
         ax.scatter(self.v_true, self.z_true, color= 'blue', label= "Exact Parameters")
         ax.scatter(self.v[self.min_index], self.z[self.min_index], color = 'k', label= "Estimated Parameters")
+
+        ax.set_title("Solution Space", fontsize= 18)
+        ax.set_xlabel("Velocity Space [m/s]", fontsize= 18)
+        ax.set_ylabel("Depth Space [m]", fontsize= 18)
 
         ax.legend()
         fig.tight_layout()
