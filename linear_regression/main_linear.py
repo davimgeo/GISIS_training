@@ -1,7 +1,7 @@
-from function import LinearRegressionBruteForce, LinearRegressionMatrix
+from function import LinearRegressionBruteForce, LinearRegressionMatrix, cmp_gather
 import time
 
-id = 1
+id = 2
 
 def linear_regression():
     start = time.time()
@@ -20,8 +20,20 @@ def linear_regression():
         end = time.time()
 
         lr_matrix.plot_graph(lr_matrix.y_reg)
+    elif id == 2:
+        cmp_gather_model = cmp_gather()
+
+        cmp_gather_model.solution_space()
+        cmp_gather_model.plot_graph()
+        cmp_gather_model.plot_mesh()
 
     return print(f"{end - start:5f}")
 
 if __name__ == "__main__":
     linear_regression()
+
+"""
+id = 0 -> linear brute force
+id = 1 -> linear matrix
+id = 2 -> cmp_gather 
+"""
