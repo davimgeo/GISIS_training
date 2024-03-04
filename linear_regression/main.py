@@ -3,7 +3,7 @@ import time
 
 id = 2
 
-def linear_regression():
+def regression():
     start = time.time()
     if id == 0:
         lr_brute_force = LinearRegressionBruteForce()
@@ -24,13 +24,15 @@ def linear_regression():
         cmp_gather_model = cmp_gather()
 
         cmp_gather_model.solution_space()
+        end = time.time()
+        
         cmp_gather_model.plot_graph()
         cmp_gather_model.plot_mesh()
 
     return print(f"{end - start:5f}")
 
 if __name__ == "__main__":
-    linear_regression()
+    regression()
 
 """
 id = 0 -> linear brute force
