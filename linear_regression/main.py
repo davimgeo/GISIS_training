@@ -29,7 +29,7 @@ def regression():
         cmp_gather_model.plot_graph()
         cmp_gather_model.plot_mesh()
 
-    return print(f"{end - start:5f}")
+    return print(f"{end - start:5f} seconds")
 
 if __name__ == "__main__":
     regression()

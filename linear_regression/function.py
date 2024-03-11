@@ -83,7 +83,7 @@ class cmp_gather(LinearRegressionBase):
         self.offset = np.arange(320)*25.0
 
         self.g_p = self.function(self.offset, self.z_true, self.v_true)
-        self.g_p_noise = self.noise(self.g_p, k=0.05)
+        self.g_p_noise = self.noise(self.g_p, k= 0.05)
 
         self.m = self.least_square_solver(self.offset**2, self.g_p_noise**2)
         self.t0 = np.sqrt(self.m[0])
@@ -106,8 +106,8 @@ class cmp_gather(LinearRegressionBase):
     def plot_graph(self):
         fig, ax = plt.subplots(ncols= 1, nrows= 1, figsize= (10,5))
 
-        ax.plot(self.offset, self.g_p, label= f"self.z = {self.z_true} and self.v = {self.v_true}")
-        ax.plot(self.offset, self.g_p_noise, label= f"self.z = {self.depth:.3f} and self.v = {self.v_noise:.3f}")
+        ax.plot(self.offset, self.g_p, label= f"z_true = {self.z_true} and v_true = {self.v_true}")
+        ax.plot(self.offset, self.g_p_noise, label= f"z_estimated = {self.depth:.3f} and v_estimated = {self.v_noise:.3f}")
 
         ax.set_title("CMP Gather", fontsize= 18)
         ax.set_xlabel("Offset [m]", fontsize= 18)
@@ -155,4 +155,3 @@ class cmp_gather(LinearRegressionBase):
         ax.legend()
         fig.tight_layout()
         plt.show()
-
