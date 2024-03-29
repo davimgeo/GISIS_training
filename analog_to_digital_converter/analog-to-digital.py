@@ -52,4 +52,6 @@ digital_signal = ADC_converter(signal, resolution)
 
 plot_graph(digital_signal, sample_interval, bits_resolution, signal)
 
+print(analog_function_true)
+
 
