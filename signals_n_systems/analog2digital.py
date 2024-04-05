@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 path = r"/home/malum/Downloads/open_data_seg_poland_vibroseis_2ms_1501x282_shot_1.bin"
 seismic = np.fromfile(path, dtype= np.float32, count=423282).reshape([1501,282], order = "F")
 
-seismic_trace = seismic[2][:]
+seismic_trace = seismic[:][100]
 
 sine_frequencies = seismic_trace
 sine_amplitudes = np.ones(len(sine_frequencies))
@@ -42,7 +42,6 @@ ax[1].plot(n, discrete_sine, '--o')
 ax[1].set_xlim([0, nt-1])
 ax[1].set_title("Discrete Signal", fontsize = 18)
 ax[1].set_xlabel("Discrete Time", fontsize = 15)
-#ax[1].set_ylabel("Amplitude")
 
 ax[2].stem(f, np.abs(discrete_sine_fft))
 ax[2].set_ylabel("Amplitudes", fontsize = 15)
