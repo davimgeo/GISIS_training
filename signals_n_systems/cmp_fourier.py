@@ -35,8 +35,9 @@ ax[1].set_xticks(np.linspace(0, nx - 1, 5))
 ax[1].set_xticklabels(np.linspace(-(nt - 1)*0.5, (nt -1)*0.5, 5))
 ax[1].set_xlabel("Offset [m]", fontsize=15)
 
-ax[1].set_yticks(np.linspace(0, nt - 1, 7))
-ax[1].set_yticklabels(np.linspace(-300, 300, 7))
+ax[1].set_yticks(np.linspace(0, nt - 1, 8))
+#ax[1].set_yticklabels(np.linspace(300, 0, 7))
+ax[1].set_yticklabels([0, 125, 212.5, 300, -300, 212.5, 125, 0])
 ax[1].set_ylabel("Frequency [Hz]", fontsize=15)
 fig.colorbar(cax)
 
