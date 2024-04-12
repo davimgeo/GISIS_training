@@ -26,7 +26,7 @@ def update(frame):
     global total_traces
     cmp = np.array([])
     for j in range(len(stations)):
-        foo = (stations[j] + shots[frame]) / 2
+        foo = (stations[j] + shots[frame]) * 0.5
         cmp = np.append(cmp, foo)
     total_traces = np.append(total_traces, cmp)   
     
